@@ -1,0 +1,34 @@
+{
+  "name": "@kra-connect/test-utils",
+  "version": "0.1.0",
+  "description": "Testing utilities for KRA-Connect SDK - test data generators, fixtures, and helpers",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "kra",
+    "kenya",
+    "tax",
+    "testing",
+    "test-utils",
+    "test-data",
+    "fixtures",
+    "mocking"
+  ],
+  "author": "KRA-Connect Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kra-connect/kra-connect"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ]
+}
