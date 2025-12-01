@@ -20,6 +20,13 @@
  * // Always returns same PIN for same seed
  * ```
  */
+export interface EnvelopeMetadata {
+  responseCode?: string;
+  responseDesc?: string;
+  status?: string;
+  requestId?: string;
+}
+
 export function generatePIN(seed?: number): string {
   const random = seed !== undefined ? seededRandom(seed) : Math.random;
 
@@ -352,6 +359,49 @@ export function formatDate(date: Date): string {
 }
 
 /**
+ * Build a success envelope that mirrors GavaConnect responses.
+ */
+export function buildSuccessEnvelope<T extends Record<string, unknown>>(
+  data: T,
+  metadata: EnvelopeMetadata = {}
+) {
+  return {
+    responseCode: metadata.responseCode ?? '70000',
+    responseDesc: metadata.responseDesc ?? 'Successful',
+    status: metadata.status ?? 'OK',
+    responseData: data,
+    requestId: metadata.requestId ?? generateRequestId(),
+  };
+}
+
+/**
+ * Build an error envelope.
+ */
+export function buildErrorEnvelope(
+  message: string,
+  code = '70001',
+  requestId?: string
+) {
+  return {
+    ErrorCode: code,
+    ErrorMessage: message,
+    RequestId: requestId ?? generateRequestId(),
+  };
+}
+
+/**
+ * Generate a mock OAuth token response.
+ */
+export function generateOAuthToken(seed?: number) {
+  const token = `mock-${generateRandomFragment(seed)}`;
+  return {
+    access_token: token,
+    expires_in: '3599',
+    token_type: 'Bearer',
+  };
+}
+
+/**
  * Seeded random number generator for deterministic testing
  *
  * @param seed - Seed number
@@ -364,6 +414,17 @@ function seededRandom(seed: number): () => number {
     value = (value * 9301 + 49297) % 233280;
     return value / 233280;
   };
+}
+
+function generateRequestId(): string {
+  return `mock-${generateRandomFragment()}`;
+}
+
+function generateRandomFragment(seed?: number): string {
+  const random = seed !== undefined ? seededRandom(seed) : Math.random;
+  return Math.floor(random() * 1_000_000_000)
+    .toString(36)
+    .padStart(6, '0');
 }
 
 /**
